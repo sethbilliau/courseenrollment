@@ -1,35 +1,9 @@
 # course enrollment
 source('styleguide.R')
 source('cleaner.R')
-dat = readxl::read_xlsx("class_enrollment_summary_by_term_1.31.20.xlsx")
-
-### Clean 
-# Removefirst few bad rows
-dat = dat[-c(1:2),]
-
-# recreate header  
-colnames(dat) <- as.character(unlist(dat[1,]))
-colnames(dat)[1:6] = c("ID", "Course", "LongTitle", "SectionCode", "Department", "Instructor")
-dat = dat[-1, ]
-
-# as.numeric char columns 
-dat[7:14] = apply(dat[7:14], 2, as.numeric)
-
-# aggregate by course
-dat.agg = aggregate(dat$Total, by=list(Course=dat$Course), FUN=sum)
-colnames(dat.agg)[2] <- "Total" 
-
-### analyze 
-# sorting by total enrollment
-grandtotal.df = arrange(dat, desc(Total))
-total.df = arrange(dat.agg, desc(Total))
-
-# Grand Totals 
-grandtotal.df[1,]
-
 
 # top 10 class
-top10.df = total.df[1:12,]
+top10.df = dat20[2:11,]
 
 # barplot for top 10 enrollment
 p_full <- ggplot(top10.df, aes(x=reorder(Course, Total), y=Total))+
@@ -83,16 +57,18 @@ get_topn = function(dat, n=20) {
   return(df)
 }
 
-make_graph <- function(dat, year, color_vec) { 
-  p_full <- ggplot(dat, aes(x=reorder(Course, Total), y=Total, fill=Course))+
+
+make_graph <- function(dat, year) { 
+  p_full <- ggplot(dat, aes(x=reorder(Course, Total), y=Total, fill=fill))+
     geom_bar(stat='identity') + 
-    scale_fill_manual(values=color_vec) + 
+    scale_fill_manual(values=primary, drop = FALSE) + 
     labs(title=paste("Top 20 by Total Enrollment: Spring", year)) +
     xlab("Enrollment") +
-    ylab("Course") + 
-    coord_flip() +
-    theme_hodp() + 
-    theme(legend.position = "none")
+    ylab("Course") +
+    #scale_y_continuous(expand = c(0,0)) +
+    coord_flip(ylim=c(0,600)) +
+    guides(fill=guide_legend(title="Course Type")) + 
+    theme_hodp() 
   return(p_full)
 }
 
@@ -102,28 +78,105 @@ top20_19 = get_topn(dat19)
 top20_18 = get_topn(dat18)
 top20_17 = get_topn(dat17)
 top20_16 = get_topn(dat16)
+top20_20$Course <- relevel(top20_20$Course, "i")
 
+# IGNORE
 socialscience = primary[1]
 science = primary[2]
 humanities = primary[3]
 seas = primary[4]
 gened = primary[5]
 
-p16 = make_graph(top20_16, 2016, c(rep(socialscience,2), 
-                                   rep(science,2),
-                                   gened,
-                                   socialscience,
-                                   rep(seas,3),
-                                   rep(science,2),
-                                   rep(gened,2), 
-                                   socialscience, 
-                                   gened, 
-                                   rep(seas, 3),
-                                   humanities,
-                                   science))
+top20_16$fill= c(rep("Social Science",2), 
+                 rep("Science",2),
+                 "GenEd",
+                 "Social Science",
+                 rep("SEAS",3),
+                 rep("Science",2),
+                 rep("GenEd",2), 
+                 "Social Science", 
+                 "GenEd", 
+                 rep("SEAS", 3),
+                 "Humanities",
+                 "Science")
+top20_16$fill <- as.factor(top20_16$fill)
+top20_16$fill <- factor(top20_16$fill,levels(top20_16$fill)[c(5,3,4,2,1)])
 
-p17 = make_graph(top20_17, 2017)
-p18 = make_graph(top20_18, 2018)
-p19 = make_graph(top20_19, 2019)
-p20 = make_graph(top20_20, 2020)
+top20_17$fill = c(rep("Social Science",2),
+                  "GenEd",
+                  "Science",
+                  "GenEd",
+                  "Social Science",
+                  rep("SEAS",3),
+                  rep("Science",2),
+                  rep("GenEd",2), 
+                  "Social Science", 
+                  "GenEd", 
+                  rep("SEAS", 3),
+                  "Humanities",
+                  "Science")
+top20_17$fill <- as.factor(top20_17$fill)
+top20_17$fill <- factor(top20_17$fill,levels(top20_16$fill)[c(1:5)])
+
+top20_18$fill = c(rep("Social Science",2), 
+                  "SEAS", 
+                  rep("Science",2),
+                  'GenEd', 
+                  'SEAS',
+                  "GenEd",
+                  "SEAS",
+                  "Science",
+                  rep("SEAS",3),
+                  "Science",
+                  "GenEd",
+                  "SEAS",
+                  "Social Science",
+                  rep("SEAS",3))
+top20_18$fill <- as.factor(top20_18$fill)
+top20_18$fill <- factor(top20_18$fill,levels(top20_16$fill)[c(1:5)])
+
+top20_19$fill = c("Social Science", 
+                  rep("Science",2),
+                  "Social Science", 
+                  "SEAS", 
+                  "Social Science", 
+                  "Science",
+                  "GenEd", 
+                  "Social Science", 
+                  "Science",
+                  "Science", # History of Science
+                  "GenEd",
+                  rep("SEAS",2),
+                  "Science",
+                  "GenEd",
+                  "SEAS",
+                  "Humanities",
+                  "GenEd",
+                  "Humanities")
+top20_19$fill <- as.factor(top20_19$fill)
+top20_19$fill <- factor(top20_19$fill,levels(top20_16$fill)[c(1:5)])
+
+top20_20$fill = c("Social Science", 
+                  "Science",
+                  "Social Science", 
+                  "Science",
+                  rep("SEAS", 2),
+                  "GenEd", 
+                  "Science",
+                  "Social Science", 
+                  rep("SEAS",2),
+                  "GenEd",
+                  "Social Science", 
+                  "Science",
+                  "SEAS",
+                  "Humanities",
+                  rep("GenEd",4))
+top20_20$fill <- as.factor(top20_20$fill)
+top20_20$fill <- factor(top20_20$fill,levels(top20_16$fill)[c(1:5)])
+
+p16 = make_graph(top20_16, 2016); p16
+p17 = make_graph(top20_17, 2017); p17
+p18 = make_graph(top20_18, 2018); p18
+p19 = make_graph(top20_19, 2019); p19
+p20 = make_graph(top20_20, 2020); p20
 

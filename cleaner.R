@@ -32,7 +32,7 @@ cleaner18 = function(dat){
   return(total.df)
 }
 
-dat20 = readxl::read_xlsx("class_enrollment_summary_by_term_1.31.20.xlsx")
+dat20 = readxl::read_xlsx("class_enrollment_summary_by_term_2.14.20.xlsx")
 dat19 = readxl::read_xlsx("pastdata/enrollments19.xlsx")
 dat18 = readxl::read_xlsx("pastdata/enrollments18.xlsx")
 dat17 = readxl::read_xlsx("pastdata/enrollments17.xlsx")
