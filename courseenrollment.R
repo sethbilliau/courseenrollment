@@ -14,6 +14,7 @@ p_full <- ggplot(top10.df, aes(x=reorder(Course, Total), y=Total))+
   coord_flip() +
   theme_hodp()
 p_full
+
 grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
 
 
