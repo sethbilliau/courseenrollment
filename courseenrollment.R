@@ -15,13 +15,14 @@ p_full <- ggplot(top10.df, aes(x=reorder(Course, Total), y=Total))+
   theme_hodp()
 p_full
 
-grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), 
+                  width = unit(1.5, 'cm'))
 
 
 get_classes = function(dat, year) { 
   relevant_classes = c('ECON 10B', "LIFESCI 1B", "PHYSCI 11",
                        'CHEM 27', 'MATH 21B', 'PHYSCI 3', 'COMPSCI 124',
-                       'ECON 1010B','MATH 21A', 'AFRAMER 119X')
+                       'ECON 1010B', 'MATH 21A', 'AFRAMER 119X')
   classes = dat[dat$Course %in% relevant_classes,]
   classes$year = year
   return(classes)
@@ -47,7 +48,7 @@ p = ggplot(classes, aes(x=year, y = Total)) +
   geom_line(aes(color = Course), size = 1) + 
   labs(title="Class 5-Year Trajectory") +
   xlab("Enrollment") +
-  ylab("Course") + 
+  ylab("Course") +
   theme_hodp()
 p
 ggplotly(p)
@@ -79,14 +80,7 @@ top20_19 = get_topn(dat19)
 top20_18 = get_topn(dat18)
 top20_17 = get_topn(dat17)
 top20_16 = get_topn(dat16)
-top20_20$Course <- relevel(top20_20$Course, "i")
-
-# IGNORE
-socialscience = primary[1]
-science = primary[2]
-humanities = primary[3]
-seas = primary[4]
-gened = primary[5]
+# top20_20$Course <- relevel(top20_20$Course, "i")
 
 top20_16$fill= c(rep("Social Science",2), 
                  rep("Science",2),

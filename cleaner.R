@@ -14,7 +14,7 @@ cleaner = function(dat){
   
   # aggregate by course
   dat.agg = aggregate(dat$Total, by=list(Course=dat$Course), FUN=sum)
-  colnames(dat.agg)[2] <- "Total" 
+  # colnames(dat.agg)[2] <- "Total" 
   total.df = arrange(dat.agg, desc(Total))
   return(total.df)
 }
@@ -27,7 +27,7 @@ cleaner18 = function(dat){
   
   # aggregate by course
   dat.agg = aggregate(dat$Total, by=list(Course=dat$Course), FUN=sum)
-  colnames(dat.agg)[2] <- "Total" 
+  # colnames(dat.agg)[2] <- "Total" 
   total.df = arrange(dat.agg, desc(Total))
   return(total.df)
 }
@@ -43,4 +43,5 @@ dat18 = cleaner18(dat18)
 dat17 = cleaner18(dat17)
 dat16 = cleaner18(dat16)
 
-View(dat20)
+
+
